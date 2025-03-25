@@ -1,8 +1,6 @@
 # Teclado
 
-**Teclado** es una herramienta desarrollada en Python que, a través de una serie de preguntas interactivas, determina la distribución física de tu teclado. Este proyecto nació de la necesidad de identificar con precisión el layout de teclados en sistemas Linux, específicamente en Debian 12.
-
-**Teclado** es una herramienta desarrollada en Python que identifica la distribución física de tu teclado mediante preguntas interactivas. Está orientada a usuarios de Linux que enfrentan dificultades para determinar con certeza qué layout están utilizando.
+Teclado es una herramienta desarrollada en Python que identifica la distribución física de tu teclado mediante una serie de preguntas interactivas. Nació de la necesidad de detectar con precisión el layout en sistemas Linux —especialmente en Debian 12— y está orientada a quienes enfrentan dificultades para saber con certeza qué distribución están utilizando.
 
 ## 🎯 Motivación
 
