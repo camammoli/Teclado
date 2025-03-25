@@ -8,6 +8,15 @@ Durante una experiencia que duro más de lo que esperaba para algo sencillo (ide
 
 > *Me llevó tanto tiempo resolver esto, que la única forma de que haya valido la pena es compartirlo y facilitarle el camino a otros en situaciones similares. Valoro enormemente el feedback de la comunidad para mejorar y adaptar esta herramienta a diferentes entornos y necesidades.*
 
+⚠️ Nota de advertencia
+
+Este proyecto fue desarrollado en el transcurso de un solo día, con el foco puesto en que fuera funcional y útil desde el primer momento.
+Seguramente tenga algunos bugs o comportamientos inesperados en casos particulares, pero puede ejecutarse con total seguridad: no modifica el sistema ni realiza acciones fuera del entorno del script.
+
+En la práctica, va a funcionar correctamente en el 95% de los casos, y en el restante 5%, incluso con errores menores, va a identificar correctamente la distribución del teclado.
+
+Si encontrás algún problema, estaré muy agradecido si me lo hacés saber para poder corregirlo lo antes posible. 🙏
+
 ## ✨ Características
 
 - **Interacción sencilla**: Responde a una serie de preguntas sobre teclas específicas para determinar el layout.
