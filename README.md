@@ -2,20 +2,25 @@
 
 **Teclado** es una herramienta desarrollada en Python que, a través de una serie de preguntas interactivas, determina la distribución física de tu teclado. Este proyecto nació de la necesidad de identificar con precisión el layout de teclados en sistemas Linux, específicamente en Debian 12.
 
-## Motivación
+**Teclado** es una herramienta desarrollada en Python que identifica la distribución física de tu teclado mediante preguntas interactivas. Está orientada a usuarios de Linux que enfrentan dificultades para determinar con certeza qué layout están utilizando.
 
-Despues de bastante tiempo perdido, muchas pruebas y mas errores (y horrores) para algo tan simple como identificar correctamente la distribución de mi teclado en Linux Debian 12, decidí crear esta herramienta. Decidi que compartir esta solución podría ahorrar tiempo y esfuerzo a otros en situaciones similares. Valoro enormemente el feedback de la comunidad para mejorar y adaptar esta herramienta a diferentes entornos y necesidades.
+## 🎯 Motivación
 
-## Características
+Durante una experiencia que duro más de lo que esperaba para algo sencillo (idealmente) como configurar un teclado en un Debian 12, donde surgieron constantes problemas de mapeo de teclas, hubo una enorme perdida de tiempo, nació esta herramienta, luego de incontables pruebas, errores y frustraciones con configuraciones estándar del sistema.
+
+> *Me llevó tanto tiempo resolver esto, que la única forma de que haya valido la pena es compartirlo y facilitarle el camino a otros en situaciones similares. Valoro enormemente el feedback de la comunidad para mejorar y adaptar esta herramienta a diferentes entornos y necesidades.*
+
+## ✨ Características
 
 - **Interacción sencilla**: Responde a una serie de preguntas sobre teclas específicas para determinar el layout.
 - **Soporte para múltiples distribuciones**: Incluye firmas de layouts comunes como Latinoamericano, Español (España), US (ANSI), US-Intl y BR ABNT2.
 - **Resultados detallados**: Proporciona un porcentaje de coincidencia con cada distribución analizada.
 
-## Requisitos
+
+## 💻 Requisitos
 
 - Python 3.x
-- Biblioteca `pynput`
+- [`pynput`](https://pypi.org/project/pynput/)
 
 ## Instalación
 
