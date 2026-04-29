@@ -1,89 +1,66 @@
 # Teclado
 
-Teclado es una herramienta desarrollada en Python que identifica la distribución física de tu teclado mediante una serie de preguntas interactivas. Nació de la necesidad de detectar con precisión el layout en sistemas Linux —especialmente en Debian 12— y está orientada a quienes enfrentan dificultades para saber con certeza qué distribución están utilizando.
+Detecta el layout físico de tu teclado en Linux mediante un cuestionario interactivo de teclas.
 
-## 🎯 Motivación
+Útil cuando `localectl` o `setxkbmap` no te dicen lo que realmente tenés, especialmente en Debian 12 con teclados importados.
 
-Durante una experiencia que duro más de lo que esperaba para algo sencillo (idealmente) como configurar un teclado en un Debian 12, donde surgieron constantes problemas de mapeo de teclas, hubo una enorme perdida de tiempo, nació esta herramienta, luego de incontables pruebas, errores y frustraciones con configuraciones estándar del sistema.
+## Layouts soportados
 
-> *Me llevó tanto tiempo resolver esto, que la única forma de que haya valido la pena es compartirlo y facilitarle el camino a otros en situaciones similares. Valoro enormemente el feedback de la comunidad para mejorar y adaptar esta herramienta a diferentes entornos y necesidades.*
-
-⚠️ Nota de advertencia
-
-Este proyecto fue desarrollado en el transcurso de un solo día, con el foco puesto en que fuera funcional y útil desde el primer momento.
-Seguramente tenga algunos bugs o comportamientos inesperados en casos particulares, pero puede ejecutarse con total seguridad: no modifica el sistema ni realiza acciones fuera del entorno del script.
-
-En la práctica, va a funcionar correctamente en el 95% de los casos, y en el restante 5%, incluso con errores menores, va a identificar correctamente la distribución del teclado.
-
-Si encontrás algún problema, estaré muy agradecido si me lo hacés saber para poder corregirlo lo antes posible. 🙏
-
-## ✨ Características
-
-- **Interacción sencilla**: Responde a una serie de preguntas sobre teclas específicas para determinar el layout.
-- **Soporte para múltiples distribuciones**: Incluye firmas de layouts comunes como Latinoamericano, Español (España), US (ANSI), US-Intl y BR ABNT2.
-- **Resultados detallados**: Proporciona un porcentaje de coincidencia con cada distribución analizada.
-
-
-## 💻 Requisitos
-
-- Python 3.x
-- [`pynput`](https://pypi.org/project/pynput/)
+| Layout | Descripción |
+|---|---|
+| Latinoamericano | Estándar Argentina/Latinoamérica (ñ, ¿, ¡) |
+| Latinoamericano Dell/HP | Variante con enter vertical |
+| Español (España) | ISO europeo |
+| US ANSI | Inglés americano estándar |
+| US Internacional | Con tildes por dead keys |
+| UK (Inglés) | Inglés británico |
+| Francés AZERTY | |
+| Alemán QWERTZ | |
+| Italiano QWERTY | |
+| Portugués ABNT2 | Brasil |
+| Canadiense Francés CSA | |
+| Japonés JIS | |
 
 ## Instalación
 
-1. **Clona el repositorio**:
+```bash
+git clone https://github.com/camammoli/Teclado.git
+cd Teclado
 
-   ```bash
-   git clone https://github.com/camammoli/Teclado.git
-   ```
+# Con venv (recomendado)
+python3 -m venv env
+source env/bin/activate
+pip install -r requirements.txt
 
-2. **Navega al directorio del proyecto**:
-
-   ```bash
-   cd Teclado
-   ```
-
-3. **Instala la biblioteca necesaria**:
-
-   ```bash
-   pip install pynput
-   ```
+# O directo
+pip install pynput>=1.7
+```
 
 ## Uso
-
-Ejecuta el script principal:
 
 ```bash
 python tecladofinal.py
 ```
 
-Sigue las instrucciones en pantalla, presionando las teclas solicitadas. Al finalizar, se mostrará el layout detectado junto con el porcentaje de coincidencia.
+Seguí las instrucciones: el script te pide que presiones teclas específicas y determina el layout con un porcentaje de confianza.
 
-## Notas
+## Notas de compatibilidad
 
-- Esta herramienta ha sido probada principalmente en **Linux Debian 12**. Su comportamiento en otros sistemas puede variar.
-- Se agradece cualquier retroalimentación o reporte de bugs para mejorar la herramienta.
+- **Funciona en:** Linux Debian 12, Ubuntu 22.04+
+- **Requiere:** acceso al teclado físico (no funciona por SSH)
+- **Wayland:** puede requerir ejecutar como root o configurar permisos de `/dev/input`
+- **No modifica** el sistema operativo — es solo lectura
 
-## Futuras Mejoras
+## Limitaciones
 
-- Ampliar la base de datos de layouts para incluir más distribuciones.
-- Adaptar la herramienta para su uso en otros sistemas operativos.
-- Mejorar la precisión en la detección de layouts menos comunes.
+- No detecta layouts muy poco comunes ni variantes de fabricante
+- En Wayland, `pynput` puede necesitar permisos adicionales
+- No funciona en Windows ni macOS (usa `localectl` en Linux)
 
-## Bugs Conocidos
+## Motivación
 
-- En algunos entornos, la detección de combinaciones de teclas puede ser imprecisa debido a limitaciones del sistema o conflictos con otras aplicaciones.
-
-## Proyectos Similares
-
-- No los encontré pero me interesaría mucho saber si los hay y tratar de ayudar (y aprender) de ellos.
+Surgió de un problema real: configurar el teclado en Debian 12 donde los mapeos estándar fallaban. Si tardás más de 10 minutos en saber qué layout tenés, esta herramienta es para vos.
 
 ## Licencia
 
-Este proyecto está licenciado bajo la **Creative Commons Atribución-CompartirIgual 4.0 Internacional**. Esto significa que eres libre de compartir y adaptar el material, siempre y cuando se otorgue el crédito adecuado y las nuevas creaciones se licencien bajo los mismos términos.
-
-Para más detalles, consulta el archivo `LICENSE`.
-
-## Contacto
-
-Para sugerencias, reportes de bugs o contribuciones, por favor abre un issue en el repositorio o contacta directamente a través de GitHub.
+CC BY-SA 4.0 — Carlos Ariel Mammoli, Mendoza, Argentina
