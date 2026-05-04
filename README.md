@@ -65,7 +65,17 @@ Seguí las instrucciones en pantalla. Al final obtenés un ranking con porcentaj
 
 Algunos teclados de gaming tienen `\` en TLDE (izquierda del 1) y `\|` en BKSL en lugar de los valores latam estándar. Esta variante **no existe en Debian por defecto** — hay que agregarla manualmente.
 
-Ver [`fix_xk800_layout.sh`](https://github.com/camammoli/Teclado) para un script que instala la variante `latam xk800` en el sistema xkb y la aplica con `setxkbmap`.
+Usar [`fix_xk800_layout.sh`](fix_xk800_layout.sh) con sudo para instalar la variante `latam xk800` en el sistema xkb y aplicarla con `setxkbmap`. El script es idempotente: si ya está aplicado, lo detecta y no modifica nada.
+
+```bash
+sudo bash fix_xk800_layout.sh
+```
+
+Para aplicarlo de forma permanente al sistema:
+
+```bash
+localectl set-x11-keymap latam pc105 xk800
+```
 
 ## Licencia
 
