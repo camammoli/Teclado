@@ -105,8 +105,17 @@ DISTRIBUCIONES = {
         'Izquierda del 1':              {'normal': '|',   'shift': '°'},
         'Primera a la derecha de P':    {'normal': '`',   'shift': '^'},
         'Tecla Ñ':                      {'normal': 'ñ',   'shift': 'Ñ'},
-        'Primera a la derecha de Ñ':    {'normal': '´', 'shift': '¨'},
+        'Primera a la derecha de Ñ':    {'normal': '´',   'shift': '¨'},
         'Tecla \\ — al final de fila Q, antes del Enter':{'normal': 'ç',   'shift': 'Ç'},
+        'Última de la fila de números': {'normal': '¿',   'shift': '¡'},
+    },
+    "Latinoamericano variante gaming/AR (TLDE=\\, BKSL=\\|)": {
+        # Soul XK-800 y similares: nodeadkeys pero TLDE=\ y BKSL=\/|
+        'Izquierda del 1':              {'normal': '\\',  'shift': '°'},
+        'Primera a la derecha de P':    {'normal': '`',   'shift': '^'},
+        'Tecla Ñ':                      {'normal': 'ñ',   'shift': 'Ñ'},
+        'Primera a la derecha de Ñ':    {'normal': '´',   'shift': '¨'},
+        'Tecla \\ — al final de fila Q, antes del Enter':{'normal': '\\',  'shift': '|'},
         'Última de la fila de números': {'normal': '¿',   'shift': '¡'},
     },
     "Latinoamericano Dvorak (latam dvorak)": {
