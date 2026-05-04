@@ -13,7 +13,7 @@ TECLAS_PRUEBA = [
     {'nombre': 'Primera a la derecha de P',   'normal': None, 'shift': None},  # AD11
     {'nombre': 'Tecla Ñ',                     'normal': None, 'shift': None},  # AC10
     {'nombre': 'Primera a la derecha de Ñ',   'normal': None, 'shift': None},  # AC11
-    {'nombre': 'Tecla barra inversa',         'normal': None, 'shift': None},  # BKSL
+    {'nombre': 'Tecla \\ — al final de fila Q, antes del Enter', 'normal': None, 'shift': None},  # BKSL
     {'nombre': 'Última de la fila de números','normal': None, 'shift': None},  # AE12
 ]
 
@@ -97,7 +97,7 @@ DISTRIBUCIONES = {
         'Primera a la derecha de P':    {'normal': DEAD,  'shift': DEAD},
         'Tecla Ñ':                      {'normal': 'ñ',   'shift': 'Ñ'},
         'Primera a la derecha de Ñ':    {'normal': '{',   'shift': '['},
-        'Tecla barra inversa':          {'normal': '}',   'shift': ']'},
+        'Tecla \\ — al final de fila Q, antes del Enter':{'normal': '}',   'shift': ']'},
         'Última de la fila de números': {'normal': '¿',   'shift': '¡'},
     },
     "Latinoamericano sin teclas muertas (latam nodeadkeys)": {
@@ -106,7 +106,7 @@ DISTRIBUCIONES = {
         'Primera a la derecha de P':    {'normal': '`',   'shift': '^'},
         'Tecla Ñ':                      {'normal': 'ñ',   'shift': 'Ñ'},
         'Primera a la derecha de Ñ':    {'normal': '´', 'shift': '¨'},
-        'Tecla barra inversa':          {'normal': 'ç',   'shift': 'Ç'},
+        'Tecla \\ — al final de fila Q, antes del Enter':{'normal': 'ç',   'shift': 'Ç'},
         'Última de la fila de números': {'normal': '¿',   'shift': '¡'},
     },
     "Latinoamericano Dvorak (latam dvorak)": {
@@ -115,7 +115,7 @@ DISTRIBUCIONES = {
         'Primera a la derecha de P':    {'normal': DEAD,  'shift': DEAD},
         'Tecla Ñ':                      {'normal': 's',   'shift': 'S'},
         'Primera a la derecha de Ñ':    {'normal': '{',   'shift': '['},
-        'Tecla barra inversa':          {'normal': '}',   'shift': ']'},
+        'Tecla \\ — al final de fila Q, antes del Enter':{'normal': '}',   'shift': ']'},
         'Última de la fila de números': {'normal': '¿',   'shift': '¡'},
     },
     "Latinoamericano Colemak (latam colemak)": {
@@ -124,7 +124,7 @@ DISTRIBUCIONES = {
         'Primera a la derecha de P':    {'normal': DEAD,  'shift': DEAD},
         'Tecla Ñ':                      {'normal': 'o',   'shift': 'O'},
         'Primera a la derecha de Ñ':    {'normal': '{',   'shift': '['},
-        'Tecla barra inversa':          {'normal': '}',   'shift': ']'},
+        'Tecla \\ — al final de fila Q, antes del Enter':{'normal': '}',   'shift': ']'},
         'Última de la fila de números': {'normal': '¿',   'shift': '¡'},
     },
     "Latinoamericano (Windows — variante común)": {
@@ -133,7 +133,7 @@ DISTRIBUCIONES = {
         'Primera a la derecha de P':    {'normal': DEAD,  'shift': DEAD},
         'Tecla Ñ':                      {'normal': 'ñ',   'shift': 'Ñ'},
         'Primera a la derecha de Ñ':    {'normal': '{',   'shift': '['},
-        'Tecla barra inversa':          {'normal': '}',   'shift': ']'},
+        'Tecla \\ — al final de fila Q, antes del Enter':{'normal': '}',   'shift': ']'},
         'Última de la fila de números': {'normal': "'",   'shift': '?'},
     },
     # ── España ────────────────────────────────────────────────────────────────
@@ -142,7 +142,7 @@ DISTRIBUCIONES = {
         'Primera a la derecha de P':    {'normal': DEAD,  'shift': DEAD},
         'Tecla Ñ':                      {'normal': 'ñ',   'shift': 'Ñ'},
         'Primera a la derecha de Ñ':    {'normal': DEAD,  'shift': DEAD},
-        'Tecla barra inversa':          {'normal': 'ç',   'shift': 'Ç'},
+        'Tecla \\ — al final de fila Q, antes del Enter':{'normal': 'ç',   'shift': 'Ç'},
         'Última de la fila de números': {'normal': DEAD,  'shift': DEAD},
     },
     # ── US / UK ───────────────────────────────────────────────────────────────
@@ -151,7 +151,7 @@ DISTRIBUCIONES = {
         'Primera a la derecha de P':    {'normal': '[',   'shift': '{'},
         'Tecla Ñ':                      {'normal': ';',   'shift': ':'},
         'Primera a la derecha de Ñ':    {'normal': "'",   'shift': '"'},
-        'Tecla barra inversa':          {'normal': '\\',  'shift': '|'},
+        'Tecla \\ — al final de fila Q, antes del Enter':{'normal': '\\',  'shift': '|'},
         'Última de la fila de números': {'normal': '=',   'shift': '+'},
     },
     "UK Inglés (gb)": {
@@ -159,7 +159,7 @@ DISTRIBUCIONES = {
         'Primera a la derecha de P':    {'normal': '[',   'shift': '{'},
         'Tecla Ñ':                      {'normal': ';',   'shift': ':'},
         'Primera a la derecha de Ñ':    {'normal': "'",   'shift': '@'},
-        'Tecla barra inversa':          {'normal': '#',   'shift': '~'},
+        'Tecla \\ — al final de fila Q, antes del Enter':{'normal': '#',   'shift': '~'},
         'Última de la fila de números': {'normal': '=',   'shift': '+'},
     },
     # ── Europa continental ────────────────────────────────────────────────────
@@ -168,7 +168,7 @@ DISTRIBUCIONES = {
         'Primera a la derecha de P':    {'normal': 'ü',   'shift': 'Ü'},
         'Tecla Ñ':                      {'normal': 'ö',   'shift': 'Ö'},
         'Primera a la derecha de Ñ':    {'normal': 'ä',   'shift': 'Ä'},
-        'Tecla barra inversa':          {'normal': '#',   'shift': "'"},
+        'Tecla \\ — al final de fila Q, antes del Enter':{'normal': '#',   'shift': "'"},
         'Última de la fila de números': {'normal': 'ß',   'shift': '?'},
     },
     "Francés AZERTY (fr)": {
@@ -176,7 +176,7 @@ DISTRIBUCIONES = {
         'Primera a la derecha de P':    {'normal': '^',   'shift': '¨'},
         'Tecla Ñ':                      {'normal': 'm',   'shift': 'M'},
         'Primera a la derecha de Ñ':    {'normal': 'ù',   'shift': '%'},
-        'Tecla barra inversa':          {'normal': '*',   'shift': 'µ'},
+        'Tecla \\ — al final de fila Q, antes del Enter':{'normal': '*',   'shift': 'µ'},
         'Última de la fila de números': {'normal': ')',   'shift': '='},
     },
     "Italiano QWERTY (it)": {
@@ -184,7 +184,7 @@ DISTRIBUCIONES = {
         'Primera a la derecha de P':    {'normal': 'è',   'shift': 'é'},
         'Tecla Ñ':                      {'normal': 'ò',   'shift': 'ç'},
         'Primera a la derecha de Ñ':    {'normal': 'à',   'shift': '°'},
-        'Tecla barra inversa':          {'normal': 'ù',   'shift': '§'},
+        'Tecla \\ — al final de fila Q, antes del Enter':{'normal': 'ù',   'shift': '§'},
         'Última de la fila de números': {'normal': "'",   'shift': '^'},
     },
     # ── Otros ─────────────────────────────────────────────────────────────────
@@ -193,7 +193,7 @@ DISTRIBUCIONES = {
         'Primera a la derecha de P':    {'normal': DEAD,  'shift': DEAD},
         'Tecla Ñ':                      {'normal': 'ç',   'shift': 'Ç'},
         'Primera a la derecha de Ñ':    {'normal': '~',   'shift': '^'},
-        'Tecla barra inversa':          {'normal': '{',   'shift': '['},
+        'Tecla \\ — al final de fila Q, antes del Enter':{'normal': '{',   'shift': '['},
         'Última de la fila de números': {'normal': '=',   'shift': '+'},
     },
     "Canadiense Francés (ca-multix)": {
@@ -201,7 +201,7 @@ DISTRIBUCIONES = {
         'Primera a la derecha de P':    {'normal': '^',   'shift': DEAD},
         'Tecla Ñ':                      {'normal': ';',   'shift': ':'},
         'Primera a la derecha de Ñ':    {'normal': DEAD,  'shift': DEAD},
-        'Tecla barra inversa':          {'normal': '<',   'shift': '>'},
+        'Tecla \\ — al final de fila Q, antes del Enter':{'normal': '<',   'shift': '>'},
         'Última de la fila de números': {'normal': '-',   'shift': '_'},
     },
 }
