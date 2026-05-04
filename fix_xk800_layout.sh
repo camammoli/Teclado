@@ -7,11 +7,16 @@ EVDEV_LST=/usr/share/X11/xkb/rules/evdev.lst
 echo "==> Haciendo backup de $LATAM..."
 cp "$LATAM" "${LATAM}.bak"
 
-echo "==> Reconstruyendo archivo latam..."
-TMPFILE=$(mktemp)
-head -n 238 "$LATAM" > "$TMPFILE"
-
-cat >> "$TMPFILE" << 'XKBEOF'
+echo "==> Actualizando archivo latam..."
+if grep -q "xkb_symbols \"xk800\"" "$LATAM"; then
+    echo "    Variante xk800 ya presente en latam, saltando."
+else
+    TMPFILE=$(mktemp)
+    # Toma las primeras 238 líneas (hasta el include de colemak-gaming)
+    # y agrega el cierre del bloque + la variante xk800.
+    # Asume Debian 12 con latam sin parchear (238 líneas hasta ese punto).
+    head -n 238 "$LATAM" > "$TMPFILE"
+    cat >> "$TMPFILE" << 'XKBEOF'
 };
 
 partial alphanumeric_keys
@@ -22,10 +27,10 @@ xkb_symbols "xk800" {
     key <BKSL> { [ backslash, bar, braceright, braceright ] };
 };
 XKBEOF
-
-cp "$TMPFILE" "$LATAM"
-rm -f "$TMPFILE"
-echo "    OK — símbolos actualizados."
+    cp "$TMPFILE" "$LATAM"
+    rm -f "$TMPFILE"
+    echo "    OK — símbolos actualizados."
+fi
 
 echo "==> Registrando variante en evdev.lst..."
 if grep -q "xk800" "$EVDEV_LST"; then
