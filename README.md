@@ -79,4 +79,4 @@ localectl set-x11-keymap latam pc105 xk800
 
 ## Licencia
 
-CC BY-SA 4.0 — Carlos Ariel Mammoli, Mendoza, Argentina
+MIT License — Carlos Ariel Mammoli, Mendoza, Argentina
