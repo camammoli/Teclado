@@ -90,10 +90,8 @@ def detect_system_layout():
 #
 DISTRIBUCIONES = {
     # ── Latinoamérica ─────────────────────────────────────────────────────────
-    "Latinoamericano (latam — Linux/macOS)": {
-        # xkb symbols/latam: TLDE=[bar,degree], AD11=[dead_acute,dead_diaeresis]
-        # AC10=[ntilde,Ntilde], AC11=[braceleft,bracketleft]
-        # BKSL=[braceright,bracketright], AE12=[questiondown,exclamdown]
+    "Latinoamericano estándar (latam)": {
+        # xkb latam basic: AD11=dead_acute/dead_diaeresis, AC11={/[, BKSL=}/]
         'Tecla a la izquierda del 1':   {'normal': '|',   'shift': '°'},
         'Tecla arriba de Enter (AD11)': {'normal': DEAD,  'shift': DEAD},
         'Letra Ñ / posición Ñ':         {'normal': 'ñ',   'shift': 'Ñ'},
@@ -101,8 +99,35 @@ DISTRIBUCIONES = {
         'Tecla entre Ñ y Enter (BKSL)': {'normal': '}',   'shift': ']'},
         'Tecla antes del Backspace':    {'normal': '¿',   'shift': '¡'},
     },
+    "Latinoamericano sin teclas muertas (latam nodeadkeys)": {
+        # xkb latam nodeadkeys: AD11=grave/asciicircum, AC11=acute/diaeresis, BKSL=ccedilla/Ccedilla
+        'Tecla a la izquierda del 1':   {'normal': '|',   'shift': '°'},
+        'Tecla arriba de Enter (AD11)': {'normal': '`',   'shift': '^'},
+        'Letra Ñ / posición Ñ':         {'normal': 'ñ',   'shift': 'Ñ'},
+        'Tecla a la derecha de la Ñ':   {'normal': '´',   'shift': '¨'},
+        'Tecla entre Ñ y Enter (BKSL)': {'normal': 'ç',   'shift': 'Ç'},
+        'Tecla antes del Backspace':    {'normal': '¿',   'shift': '¡'},
+    },
+    "Latinoamericano Dvorak (latam dvorak)": {
+        # xkb latam dvorak: AC10=s/S (ñ se mueve a AD03), AD11=dead_acute como básico
+        'Tecla a la izquierda del 1':   {'normal': '|',   'shift': '°'},
+        'Tecla arriba de Enter (AD11)': {'normal': DEAD,  'shift': DEAD},
+        'Letra Ñ / posición Ñ':         {'normal': 's',   'shift': 'S'},
+        'Tecla a la derecha de la Ñ':   {'normal': '{',   'shift': '['},
+        'Tecla entre Ñ y Enter (BKSL)': {'normal': '}',   'shift': ']'},
+        'Tecla antes del Backspace':    {'normal': '¿',   'shift': '¡'},
+    },
+    "Latinoamericano Colemak (latam colemak)": {
+        # xkb latam colemak: AC10=o/O (ñ se mueve a AD10), AD11=dead_acute como básico
+        'Tecla a la izquierda del 1':   {'normal': '|',   'shift': '°'},
+        'Tecla arriba de Enter (AD11)': {'normal': DEAD,  'shift': DEAD},
+        'Letra Ñ / posición Ñ':         {'normal': 'o',   'shift': 'O'},
+        'Tecla a la derecha de la Ñ':   {'normal': '{',   'shift': '['},
+        'Tecla entre Ñ y Enter (BKSL)': {'normal': '}',   'shift': ']'},
+        'Tecla antes del Backspace':    {'normal': '¿',   'shift': '¡'},
+    },
     "Latinoamericano (Windows — variante común)": {
-        # En Windows el driver latam tiene algunas diferencias respecto a xkb
+        # Driver latam Windows: AE12=apostrophe/question (distinto al xkb)
         'Tecla a la izquierda del 1':   {'normal': '|',   'shift': '°'},
         'Tecla arriba de Enter (AD11)': {'normal': DEAD,  'shift': DEAD},
         'Letra Ñ / posición Ñ':         {'normal': 'ñ',   'shift': 'Ñ'},
@@ -336,10 +361,25 @@ def identificar_distribucion():
         print(f"{bcolors.WARNING}Resultado poco concluyente. Revisá los detalles arriba.{bcolors.ENDC}")
     else:
         print(f"{bcolors.FAIL}{bcolors.BOLD}No se pudo identificar la distribución con certeza.{bcolors.ENDC}")
-        if sys_info:
-            layout = sys_info.get('x11_layout') or sys_info.get('xkblayout', '')
-            if layout:
-                print(f"{bcolors.OKBLUE}El sistema reporta layout: {layout}{bcolors.ENDC}")
+
+    # Cruzar con localectl para confirmar o sugerir variante
+    if sys_info:
+        layout  = sys_info.get('x11_layout') or sys_info.get('xkblayout', '')
+        variant = sys_info.get('x11_variant') or sys_info.get('xkbvariant', '')
+        if layout:
+            variant_str = f"({variant})" if variant else "(sin variante = estándar con teclas muertas)"
+            print(f"{bcolors.OKBLUE}Sistema reporta: layout={layout} {variant_str}{bcolors.ENDC}")
+            # Tabla de variantes conocidas de latam
+            _latam_variants = {
+                '':            'latam estándar (con teclas muertas, dead_acute en AD11)',
+                'nodeadkeys':  'sin teclas muertas (AD11=`/^, AC11=´/¨, BKSL=ç/Ç)',
+                'deadtilde':   'estándar + dead_tilde en AD12',
+                'dvorak':      'Dvorak (AC10=s, ñ en AD03)',
+                'colemak':     'Colemak (AC10=o, ñ en AD10)',
+                'colemak-gaming': 'Colemak con WASD en posición QWERTY',
+            }
+            if layout == 'latam' and variant in _latam_variants:
+                print(f"{bcolors.OKBLUE}  → Variante: {_latam_variants[variant]}{bcolors.ENDC}")
 
 if __name__ == '__main__':
     try:
