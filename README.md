@@ -2,24 +2,34 @@
 
 Detecta el layout físico de tu teclado en Linux mediante un cuestionario interactivo de teclas.
 
-Útil cuando `localectl` o `setxkbmap` no te dicen lo que realmente tenés, especialmente en Debian 12 con teclados importados.
+Útil cuando `localectl` o `setxkbmap` no te dicen lo que realmente tenés, especialmente en Debian 12 con teclados importados o de gaming.
 
 ## Layouts soportados
 
-| Layout | Descripción |
+| Layout | xkb / descripción |
 |---|---|
-| Latinoamericano | Estándar Argentina/Latinoamérica (ñ, ¿, ¡) |
-| Latinoamericano Dell/HP | Variante con enter vertical |
-| Español (España) | ISO europeo |
-| US ANSI | Inglés americano estándar |
-| US Internacional | Con tildes por dead keys |
-| UK (Inglés) | Inglés británico |
-| Francés AZERTY | |
-| Alemán QWERTZ | |
-| Italiano QWERTY | |
-| Portugués ABNT2 | Brasil |
-| Canadiense Francés CSA | |
-| Japonés JIS | |
+| Latinoamericano estándar | `latam` |
+| Latinoamericano sin teclas muertas | `latam nodeadkeys` |
+| Latinoamericano Dvorak | `latam dvorak` |
+| Latinoamericano Colemak | `latam colemak` |
+| Latinoamericano Colemak gaming | `latam colemak-gaming` |
+| Latinoamericano variante gaming/AR | `latam xk800` (ej. Soul XK-800) |
+| Latinoamericano Windows | Variante común de teclados genéricos |
+| Español (España) | `es` — ISO europeo |
+| US ANSI | `us` — inglés americano estándar |
+| US Internacional | `us intl` — tildes por dead keys |
+| UK (Inglés) | `gb` — inglés británico |
+| Francés AZERTY | `fr` |
+| Alemán QWERTZ | `de` |
+| Portugués ABNT2 | `br abnt2` — Brasil |
+
+## Cómo funciona
+
+El script hace preguntas sobre teclas en posiciones concretas (neutral respecto a ANSI/ISO), captura los caracteres reales que produce tu teclado y calcula un score de coincidencia contra cada layout. Si el resultado no es decisivo, el script sigue preguntando sobre teclas adicionales que discriminan entre los candidatos empatados, hasta llegar a una conclusión o agotar las posibilidades.
+
+- Detecta **teclas muertas** (`dead_acute`, `dead_diaeresis`, etc.) — aparecen como `<muerta>` en lugar de ningún carácter
+- Compatible con teclados **ANSI** (Enter de una fila) e **ISO** (Enter de dos filas)
+- Las preguntas usan descripciones de posición relativa, no nombres técnicos de keycodes
 
 ## Instalación
 
@@ -42,24 +52,20 @@ pip install pynput>=1.7
 python tecladofinal.py
 ```
 
-Seguí las instrucciones: el script te pide que presiones teclas específicas y determina el layout con un porcentaje de confianza.
+Seguí las instrucciones en pantalla. Al final obtenés un ranking con porcentaje de coincidencia para cada layout.
 
 ## Notas de compatibilidad
 
 - **Funciona en:** Linux Debian 12, Ubuntu 22.04+
-- **Requiere:** acceso al teclado físico (no funciona por SSH)
+- **Requiere:** acceso al teclado físico (no funciona por SSH sin reenvío)
 - **Wayland:** puede requerir ejecutar como root o configurar permisos de `/dev/input`
 - **No modifica** el sistema operativo — es solo lectura
 
-## Limitaciones
+## Variante xk800 (Soul XK-800 y similares)
 
-- No detecta layouts muy poco comunes ni variantes de fabricante
-- En Wayland, `pynput` puede necesitar permisos adicionales
-- No funciona en Windows ni macOS (usa `localectl` en Linux)
+Algunos teclados de gaming tienen `\` en TLDE (izquierda del 1) y `\|` en BKSL en lugar de los valores latam estándar. Esta variante **no existe en Debian por defecto** — hay que agregarla manualmente.
 
-## Motivación
-
-Surgió de un problema real: configurar el teclado en Debian 12 donde los mapeos estándar fallaban. Si tardás más de 10 minutos en saber qué layout tenés, esta herramienta es para vos.
+Ver [`fix_xk800_layout.sh`](https://github.com/camammoli/Teclado) para un script que instala la variante `latam xk800` en el sistema xkb y la aplica con `setxkbmap`.
 
 ## Licencia
 
