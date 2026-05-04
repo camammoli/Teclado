@@ -6,14 +6,15 @@ import time
 
 TIMEOUT = 10
 
-# Teclas de prueba — evitamos dead keys intencionalmente para mayor fiabilidad
+# Teclas de prueba — nombres unívocos para ANSI e ISO
+# TLDE=izq del 1, AD11=1ra der de P, BKSL=barra \, AC10=Ñ, AC11=1ra der de Ñ, AE12=últ fila núm
 TECLAS_PRUEBA = [
-    {'nombre': 'Tecla a la izquierda del 1',   'normal': None, 'shift': None},
-    {'nombre': 'Tecla arriba de Enter (AD11)',  'normal': None, 'shift': None},
-    {'nombre': 'Letra Ñ / posición Ñ',         'normal': None, 'shift': None},
-    {'nombre': 'Tecla a la derecha de la Ñ',   'normal': None, 'shift': None},
-    {'nombre': 'Tecla entre Ñ y Enter (BKSL)', 'normal': None, 'shift': None},
-    {'nombre': 'Tecla antes del Backspace',     'normal': None, 'shift': None},
+    {'nombre': 'Izquierda del 1',             'normal': None, 'shift': None},  # TLDE
+    {'nombre': 'Primera a la derecha de P',   'normal': None, 'shift': None},  # AD11
+    {'nombre': 'Tecla Ñ',                     'normal': None, 'shift': None},  # AC10
+    {'nombre': 'Primera a la derecha de Ñ',   'normal': None, 'shift': None},  # AC11
+    {'nombre': 'Tecla barra inversa',         'normal': None, 'shift': None},  # BKSL
+    {'nombre': 'Última de la fila de números','normal': None, 'shift': None},  # AE12
 ]
 
 # Sentinel para teclas muertas (dead keys): producen key.char == None en pynput
@@ -92,116 +93,116 @@ DISTRIBUCIONES = {
     # ── Latinoamérica ─────────────────────────────────────────────────────────
     "Latinoamericano estándar (latam)": {
         # xkb latam basic: AD11=dead_acute/dead_diaeresis, AC11={/[, BKSL=}/]
-        'Tecla a la izquierda del 1':   {'normal': '|',   'shift': '°'},
-        'Tecla arriba de Enter (AD11)': {'normal': DEAD,  'shift': DEAD},
-        'Letra Ñ / posición Ñ':         {'normal': 'ñ',   'shift': 'Ñ'},
-        'Tecla a la derecha de la Ñ':   {'normal': '{',   'shift': '['},
-        'Tecla entre Ñ y Enter (BKSL)': {'normal': '}',   'shift': ']'},
-        'Tecla antes del Backspace':    {'normal': '¿',   'shift': '¡'},
+        'Izquierda del 1':              {'normal': '|',   'shift': '°'},
+        'Primera a la derecha de P':    {'normal': DEAD,  'shift': DEAD},
+        'Tecla Ñ':                      {'normal': 'ñ',   'shift': 'Ñ'},
+        'Primera a la derecha de Ñ':    {'normal': '{',   'shift': '['},
+        'Tecla barra inversa':          {'normal': '}',   'shift': ']'},
+        'Última de la fila de números': {'normal': '¿',   'shift': '¡'},
     },
     "Latinoamericano sin teclas muertas (latam nodeadkeys)": {
         # xkb latam nodeadkeys: AD11=grave/asciicircum, AC11=acute/diaeresis, BKSL=ccedilla/Ccedilla
-        'Tecla a la izquierda del 1':   {'normal': '|',   'shift': '°'},
-        'Tecla arriba de Enter (AD11)': {'normal': '`',   'shift': '^'},
-        'Letra Ñ / posición Ñ':         {'normal': 'ñ',   'shift': 'Ñ'},
-        'Tecla a la derecha de la Ñ':   {'normal': '´',   'shift': '¨'},
-        'Tecla entre Ñ y Enter (BKSL)': {'normal': 'ç',   'shift': 'Ç'},
-        'Tecla antes del Backspace':    {'normal': '¿',   'shift': '¡'},
+        'Izquierda del 1':              {'normal': '|',   'shift': '°'},
+        'Primera a la derecha de P':    {'normal': '`',   'shift': '^'},
+        'Tecla Ñ':                      {'normal': 'ñ',   'shift': 'Ñ'},
+        'Primera a la derecha de Ñ':    {'normal': '´', 'shift': '¨'},
+        'Tecla barra inversa':          {'normal': 'ç',   'shift': 'Ç'},
+        'Última de la fila de números': {'normal': '¿',   'shift': '¡'},
     },
     "Latinoamericano Dvorak (latam dvorak)": {
         # xkb latam dvorak: AC10=s/S (ñ se mueve a AD03), AD11=dead_acute como básico
-        'Tecla a la izquierda del 1':   {'normal': '|',   'shift': '°'},
-        'Tecla arriba de Enter (AD11)': {'normal': DEAD,  'shift': DEAD},
-        'Letra Ñ / posición Ñ':         {'normal': 's',   'shift': 'S'},
-        'Tecla a la derecha de la Ñ':   {'normal': '{',   'shift': '['},
-        'Tecla entre Ñ y Enter (BKSL)': {'normal': '}',   'shift': ']'},
-        'Tecla antes del Backspace':    {'normal': '¿',   'shift': '¡'},
+        'Izquierda del 1':              {'normal': '|',   'shift': '°'},
+        'Primera a la derecha de P':    {'normal': DEAD,  'shift': DEAD},
+        'Tecla Ñ':                      {'normal': 's',   'shift': 'S'},
+        'Primera a la derecha de Ñ':    {'normal': '{',   'shift': '['},
+        'Tecla barra inversa':          {'normal': '}',   'shift': ']'},
+        'Última de la fila de números': {'normal': '¿',   'shift': '¡'},
     },
     "Latinoamericano Colemak (latam colemak)": {
         # xkb latam colemak: AC10=o/O (ñ se mueve a AD10), AD11=dead_acute como básico
-        'Tecla a la izquierda del 1':   {'normal': '|',   'shift': '°'},
-        'Tecla arriba de Enter (AD11)': {'normal': DEAD,  'shift': DEAD},
-        'Letra Ñ / posición Ñ':         {'normal': 'o',   'shift': 'O'},
-        'Tecla a la derecha de la Ñ':   {'normal': '{',   'shift': '['},
-        'Tecla entre Ñ y Enter (BKSL)': {'normal': '}',   'shift': ']'},
-        'Tecla antes del Backspace':    {'normal': '¿',   'shift': '¡'},
+        'Izquierda del 1':              {'normal': '|',   'shift': '°'},
+        'Primera a la derecha de P':    {'normal': DEAD,  'shift': DEAD},
+        'Tecla Ñ':                      {'normal': 'o',   'shift': 'O'},
+        'Primera a la derecha de Ñ':    {'normal': '{',   'shift': '['},
+        'Tecla barra inversa':          {'normal': '}',   'shift': ']'},
+        'Última de la fila de números': {'normal': '¿',   'shift': '¡'},
     },
     "Latinoamericano (Windows — variante común)": {
-        # Driver latam Windows: AE12=apostrophe/question (distinto al xkb)
-        'Tecla a la izquierda del 1':   {'normal': '|',   'shift': '°'},
-        'Tecla arriba de Enter (AD11)': {'normal': DEAD,  'shift': DEAD},
-        'Letra Ñ / posición Ñ':         {'normal': 'ñ',   'shift': 'Ñ'},
-        'Tecla a la derecha de la Ñ':   {'normal': '{',   'shift': '['},
-        'Tecla entre Ñ y Enter (BKSL)': {'normal': '}',   'shift': ']'},
-        'Tecla antes del Backspace':    {'normal': "'",   'shift': '?'},
+        # Driver latam Windows: AE12=apostrophe/question
+        'Izquierda del 1':              {'normal': '|',   'shift': '°'},
+        'Primera a la derecha de P':    {'normal': DEAD,  'shift': DEAD},
+        'Tecla Ñ':                      {'normal': 'ñ',   'shift': 'Ñ'},
+        'Primera a la derecha de Ñ':    {'normal': '{',   'shift': '['},
+        'Tecla barra inversa':          {'normal': '}',   'shift': ']'},
+        'Última de la fila de números': {'normal': "'",   'shift': '?'},
     },
     # ── España ────────────────────────────────────────────────────────────────
     "Español España (es — ISO)": {
-        'Tecla a la izquierda del 1':   {'normal': 'º',   'shift': 'ª'},
-        'Tecla arriba de Enter (AD11)': {'normal': DEAD,  'shift': DEAD},
-        'Letra Ñ / posición Ñ':         {'normal': 'ñ',   'shift': 'Ñ'},
-        'Tecla a la derecha de la Ñ':   {'normal': DEAD,  'shift': DEAD},
-        'Tecla entre Ñ y Enter (BKSL)': {'normal': 'ç',   'shift': 'Ç'},
-        'Tecla antes del Backspace':    {'normal': DEAD,  'shift': DEAD},
+        'Izquierda del 1':              {'normal': 'º',   'shift': 'ª'},
+        'Primera a la derecha de P':    {'normal': DEAD,  'shift': DEAD},
+        'Tecla Ñ':                      {'normal': 'ñ',   'shift': 'Ñ'},
+        'Primera a la derecha de Ñ':    {'normal': DEAD,  'shift': DEAD},
+        'Tecla barra inversa':          {'normal': 'ç',   'shift': 'Ç'},
+        'Última de la fila de números': {'normal': DEAD,  'shift': DEAD},
     },
     # ── US / UK ───────────────────────────────────────────────────────────────
     "US Internacional (us)": {
-        'Tecla a la izquierda del 1':   {'normal': DEAD,  'shift': '~'},
-        'Tecla arriba de Enter (AD11)': {'normal': '[',   'shift': '{'},
-        'Letra Ñ / posición Ñ':         {'normal': ';',   'shift': ':'},
-        'Tecla a la derecha de la Ñ':   {'normal': "'",   'shift': '"'},
-        'Tecla entre Ñ y Enter (BKSL)': {'normal': '\\',  'shift': '|'},
-        'Tecla antes del Backspace':    {'normal': '=',   'shift': '+'},
+        'Izquierda del 1':              {'normal': DEAD,  'shift': '~'},
+        'Primera a la derecha de P':    {'normal': '[',   'shift': '{'},
+        'Tecla Ñ':                      {'normal': ';',   'shift': ':'},
+        'Primera a la derecha de Ñ':    {'normal': "'",   'shift': '"'},
+        'Tecla barra inversa':          {'normal': '\\',  'shift': '|'},
+        'Última de la fila de números': {'normal': '=',   'shift': '+'},
     },
     "UK Inglés (gb)": {
-        'Tecla a la izquierda del 1':   {'normal': DEAD,  'shift': '¬'},
-        'Tecla arriba de Enter (AD11)': {'normal': '[',   'shift': '{'},
-        'Letra Ñ / posición Ñ':         {'normal': ';',   'shift': ':'},
-        'Tecla a la derecha de la Ñ':   {'normal': "'",   'shift': '@'},
-        'Tecla entre Ñ y Enter (BKSL)': {'normal': '#',   'shift': '~'},
-        'Tecla antes del Backspace':    {'normal': '=',   'shift': '+'},
+        'Izquierda del 1':              {'normal': DEAD,  'shift': '¬'},
+        'Primera a la derecha de P':    {'normal': '[',   'shift': '{'},
+        'Tecla Ñ':                      {'normal': ';',   'shift': ':'},
+        'Primera a la derecha de Ñ':    {'normal': "'",   'shift': '@'},
+        'Tecla barra inversa':          {'normal': '#',   'shift': '~'},
+        'Última de la fila de números': {'normal': '=',   'shift': '+'},
     },
     # ── Europa continental ────────────────────────────────────────────────────
     "Alemán QWERTZ (de)": {
-        'Tecla a la izquierda del 1':   {'normal': '^',   'shift': '°'},
-        'Tecla arriba de Enter (AD11)': {'normal': 'ü',   'shift': 'Ü'},
-        'Letra Ñ / posición Ñ':         {'normal': 'ö',   'shift': 'Ö'},
-        'Tecla a la derecha de la Ñ':   {'normal': 'ä',   'shift': 'Ä'},
-        'Tecla entre Ñ y Enter (BKSL)': {'normal': '#',   'shift': "'"},
-        'Tecla antes del Backspace':    {'normal': 'ß',   'shift': '?'},
+        'Izquierda del 1':              {'normal': '^',   'shift': '°'},
+        'Primera a la derecha de P':    {'normal': 'ü',   'shift': 'Ü'},
+        'Tecla Ñ':                      {'normal': 'ö',   'shift': 'Ö'},
+        'Primera a la derecha de Ñ':    {'normal': 'ä',   'shift': 'Ä'},
+        'Tecla barra inversa':          {'normal': '#',   'shift': "'"},
+        'Última de la fila de números': {'normal': 'ß',   'shift': '?'},
     },
     "Francés AZERTY (fr)": {
-        'Tecla a la izquierda del 1':   {'normal': '²',   'shift': None},
-        'Tecla arriba de Enter (AD11)': {'normal': '^',   'shift': '¨'},
-        'Letra Ñ / posición Ñ':         {'normal': 'm',   'shift': 'M'},
-        'Tecla a la derecha de la Ñ':   {'normal': 'ù',   'shift': '%'},
-        'Tecla entre Ñ y Enter (BKSL)': {'normal': '*',   'shift': 'µ'},
-        'Tecla antes del Backspace':    {'normal': ')',   'shift': '='},
+        'Izquierda del 1':              {'normal': '²',   'shift': None},
+        'Primera a la derecha de P':    {'normal': '^',   'shift': '¨'},
+        'Tecla Ñ':                      {'normal': 'm',   'shift': 'M'},
+        'Primera a la derecha de Ñ':    {'normal': 'ù',   'shift': '%'},
+        'Tecla barra inversa':          {'normal': '*',   'shift': 'µ'},
+        'Última de la fila de números': {'normal': ')',   'shift': '='},
     },
     "Italiano QWERTY (it)": {
-        'Tecla a la izquierda del 1':   {'normal': '\\',  'shift': '|'},
-        'Tecla arriba de Enter (AD11)': {'normal': 'è',   'shift': 'é'},
-        'Letra Ñ / posición Ñ':         {'normal': 'ò',   'shift': 'ç'},
-        'Tecla a la derecha de la Ñ':   {'normal': 'à',   'shift': '°'},
-        'Tecla entre Ñ y Enter (BKSL)': {'normal': 'ù',   'shift': '§'},
-        'Tecla antes del Backspace':    {'normal': "'",   'shift': '^'},
+        'Izquierda del 1':              {'normal': '\\',  'shift': '|'},
+        'Primera a la derecha de P':    {'normal': 'è',   'shift': 'é'},
+        'Tecla Ñ':                      {'normal': 'ò',   'shift': 'ç'},
+        'Primera a la derecha de Ñ':    {'normal': 'à',   'shift': '°'},
+        'Tecla barra inversa':          {'normal': 'ù',   'shift': '§'},
+        'Última de la fila de números': {'normal': "'",   'shift': '^'},
     },
     # ── Otros ─────────────────────────────────────────────────────────────────
     "Portugués Brasil ABNT2 (br)": {
-        'Tecla a la izquierda del 1':   {'normal': "'",   'shift': '"'},
-        'Tecla arriba de Enter (AD11)': {'normal': DEAD,  'shift': DEAD},
-        'Letra Ñ / posición Ñ':         {'normal': 'ç',   'shift': 'Ç'},
-        'Tecla a la derecha de la Ñ':   {'normal': '~',   'shift': '^'},
-        'Tecla entre Ñ y Enter (BKSL)': {'normal': '{',   'shift': '['},
-        'Tecla antes del Backspace':    {'normal': '=',   'shift': '+'},
+        'Izquierda del 1':              {'normal': "'",   'shift': '"'},
+        'Primera a la derecha de P':    {'normal': DEAD,  'shift': DEAD},
+        'Tecla Ñ':                      {'normal': 'ç',   'shift': 'Ç'},
+        'Primera a la derecha de Ñ':    {'normal': '~',   'shift': '^'},
+        'Tecla barra inversa':          {'normal': '{',   'shift': '['},
+        'Última de la fila de números': {'normal': '=',   'shift': '+'},
     },
     "Canadiense Francés (ca-multix)": {
-        'Tecla a la izquierda del 1':   {'normal': '/',   'shift': '\\'},
-        'Tecla arriba de Enter (AD11)': {'normal': '^',   'shift': DEAD},
-        'Letra Ñ / posición Ñ':         {'normal': ';',   'shift': ':'},
-        'Tecla a la derecha de la Ñ':   {'normal': DEAD,  'shift': DEAD},
-        'Tecla entre Ñ y Enter (BKSL)': {'normal': '<',   'shift': '>'},
-        'Tecla antes del Backspace':    {'normal': '-',   'shift': '_'},
+        'Izquierda del 1':              {'normal': '/',   'shift': '\\'},
+        'Primera a la derecha de P':    {'normal': '^',   'shift': DEAD},
+        'Tecla Ñ':                      {'normal': ';',   'shift': ':'},
+        'Primera a la derecha de Ñ':    {'normal': DEAD,  'shift': DEAD},
+        'Tecla barra inversa':          {'normal': '<',   'shift': '>'},
+        'Última de la fila de números': {'normal': '-',   'shift': '_'},
     },
 }
 
@@ -261,6 +262,13 @@ def identificar_distribucion():
         for k, v in sys_info.items():
             print(f"  {k}: {bcolors.OKGREEN}{v}{bcolors.ENDC}")
         print()
+
+    print(f"{bcolors.BOLD}Referencia de posiciones (★ = teclas que se van a pedir):{bcolors.ENDC}")
+    print(f"  {bcolors.OKBLUE}ANSI{bcolors.ENDC} (Enter 1 fila):  ★  Q  W  E  R  T  Y  U  I  O  P  ★  ...  ★←barra")
+    print(f"                          A  S  D  F  G  H  J  K  L  ★Ñ  ★  [Enter─────]")
+    print(f"  {bcolors.OKBLUE}ISO {bcolors.ENDC} (Enter 2 filas): ★  Q  W  E  R  T  Y  U  I  O  P  ★       ↵")
+    print(f"                          A  S  D  F  G  H  J  K  L  ★Ñ  ★  ★barra  ↵")
+    print(f"  Fila de números: 1  2  3  4  5  6  7  8  9  0  ...  ★←última\n")
 
     print(f"{bcolors.BOLD}Instrucciones:{bcolors.ENDC}")
     print("  · Para cada tecla: primero presionala SIN Shift, luego CON Shift")
