@@ -207,6 +207,125 @@ DISTRIBUCIONES = {
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Scoring y lógica de desempate
+# ─────────────────────────────────────────────────────────────────────────────
+
+def calcular_scores(teclas):
+    """Puntúa cada layout. Solo cuenta teclas capturadas (valor != None)."""
+    scores = []
+    for nombre_layout, ref in DISTRIBUCIONES.items():
+        puntos = 0
+        total   = 0
+        detalle = []
+        for t in teclas:
+            n_t = t['nombre']
+            if n_t not in ref:
+                continue
+            ref_n = ref[n_t]['normal']
+            ref_s = ref[n_t]['shift']
+            if t['normal'] is not None:
+                total += 1
+                if t['normal'] == ref_n:
+                    puntos += 1
+                else:
+                    got = '[muerta]' if t['normal'] == DEAD else repr(t['normal'])
+                    exp = '[muerta]' if ref_n == DEAD else repr(ref_n)
+                    detalle.append(f"    {n_t} normal: obtuve {got}, esperaba {exp}")
+            if t['shift'] is not None:
+                total += 1
+                if t['shift'] == ref_s:
+                    puntos += 1
+                else:
+                    got = '[muerta]' if t['shift'] == DEAD else repr(t['shift'])
+                    exp = '[muerta]' if ref_s == DEAD else repr(ref_s)
+                    detalle.append(f"    {n_t} shift:  obtuve {got}, esperaba {exp}")
+        pct = (puntos / total * 100) if total > 0 else 0
+        scores.append((pct, nombre_layout, detalle))
+    scores.sort(reverse=True)
+    return scores
+
+
+def es_decisivo(scores):
+    """True si el ganador está 20 puntos por delante, o tiene ≥90% sin empate."""
+    if len(scores) < 2:
+        return bool(scores)
+    top, second = scores[0][0], scores[1][0]
+    return (top - second) >= 20 or (top >= 90 and top > second)
+
+
+def layouts_empatados(scores, umbral=15):
+    """Layouts dentro de `umbral` porcentaje-puntos del líder."""
+    if not scores:
+        return []
+    top = scores[0][0]
+    return [name for pct, name, _ in scores if top - pct <= umbral]
+
+
+def teclas_discriminantes(tied_names, teclas, ya_rechazadas):
+    """
+    Teclas que aún no fueron capturadas, no fueron rechazadas, y tienen
+    valores distintos en al menos dos de los layouts empatados.
+    """
+    result = []
+    for t in teclas:
+        if t['nombre'] in ya_rechazadas:
+            continue
+        if t['normal'] is not None or t['shift'] is not None:
+            continue
+        vals = set()
+        for name in tied_names:
+            ref = DISTRIBUCIONES.get(name, {}).get(t['nombre'])
+            if ref:
+                vals.add((ref.get('normal'), ref.get('shift')))
+        if len(vals) > 1:
+            result.append(t)
+    return result
+
+
+def mostrar_ranking(scores):
+    for i, (pct, nombre, detalle) in enumerate(scores):
+        bar_len = int(pct / 5)
+        bar = '█' * bar_len + '░' * (20 - bar_len)
+        color = bcolors.OKGREEN if pct >= 75 else (bcolors.WARNING if pct >= 45 else bcolors.FAIL)
+        print(f"  {color}{bar}{bcolors.ENDC} {pct:5.1f}%  {nombre}")
+        if i == 0 and detalle:
+            for d in detalle[:4]:
+                print(f"{bcolors.WARNING}{d}{bcolors.ENDC}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+def pedir_tecla(tecla, es_desempate=False):
+    """Pregunta normal+shift para una tecla. Devuelve 'ok', 'skip' o 'cancel'."""
+    if es_desempate:
+        print(f"\n{bcolors.WARNING}▶  {tecla['nombre']}  (necesaria para el desempate){bcolors.ENDC}")
+    else:
+        print(f"\n{bcolors.HEADER}▶  {tecla['nombre']}{bcolors.ENDC}")
+
+    print(f"  {bcolors.OKBLUE}[1/2] Normal (sin Shift):{bcolors.ENDC} ", end='', flush=True)
+    r = get_key_press(con_shift=False)
+    if r['status'] == 'cancel':
+        print(f"\n{bcolors.FAIL}Cancelado.{bcolors.ENDC}"); return 'cancel'
+    if r['status'] == 'skip':
+        print(f"{bcolors.WARNING}omitida{bcolors.ENDC}"); return 'skip'
+    if r['status'] == 'valid':
+        tecla['normal'] = r['key']
+        print(f"{bcolors.OKGREEN}{'[tecla muerta]' if r['key'] == DEAD else repr(r['key'])}{bcolors.ENDC}")
+    else:
+        print(f"{bcolors.WARNING}timeout{bcolors.ENDC}"); return 'skip'
+
+    print(f"  {bcolors.OKBLUE}[2/2] Con Shift:{bcolors.ENDC} ", end='', flush=True)
+    r = get_key_press(con_shift=True)
+    if r['status'] == 'cancel':
+        return 'cancel'
+    if r['status'] == 'valid':
+        tecla['shift'] = r['key']
+        print(f"{bcolors.OKGREEN}{'[tecla muerta]' if r['key'] == DEAD else repr(r['key'])}{bcolors.ENDC}")
+    else:
+        print(f"{bcolors.WARNING}—{bcolors.ENDC}")
+    return 'ok'
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 def get_key_press(con_shift=False):
     """Captura una tecla. Dead keys → DEAD. Modifica con_shift para requerir Shift."""
     result = {'key': None, 'code': None, 'status': None}
@@ -255,7 +374,6 @@ def identificar_distribucion():
     print(f"{bcolors.HEADER}{bcolors.BOLD}Identificador de distribución de teclado{bcolors.ENDC}")
     print(f"{bcolors.OKBLUE}{'─'*50}{bcolors.ENDC}\n")
 
-    # Mostrar detección del sistema antes de pedir nada
     sys_info = detect_system_layout()
     if sys_info:
         print(f"{bcolors.BOLD}Detección automática del sistema:{bcolors.ENDC}")
@@ -269,125 +387,87 @@ def identificar_distribucion():
     print(f"  {bcolors.OKBLUE}ISO {bcolors.ENDC} (Enter 2 filas): ★  Q  W  E  R  T  Y  U  I  O  P  ★       ↵")
     print(f"                          A  S  D  F  G  H  J  K  L  ★Ñ  ★  ★barra  ↵")
     print(f"  Fila de números: 1  2  3  4  5  6  7  8  9  0  ...  ★←última\n")
-
     print(f"{bcolors.BOLD}Instrucciones:{bcolors.ENDC}")
     print("  · Para cada tecla: primero presionala SIN Shift, luego CON Shift")
-    print(f"  · Espacio = omitir    ESC = cancelar")
-    print(f"  · Tiempo por tecla: {TIMEOUT}s")
-    print(f"  · Las teclas muertas (dead keys: ´ ` ^ ~ ¨) se detectan automáticamente\n")
-
+    print(f"  · Espacio = omitir    ESC = cancelar    Tiempo por tecla: {TIMEOUT}s")
+    print(f"  · Dead keys (´ ` ^ ~ ¨) se detectan automáticamente\n")
     input(f"  {bcolors.WARNING}Presioná Enter para comenzar...{bcolors.ENDC}")
 
+    # ── Ronda inicial (todas las teclas, omisión permitida) ───────────────────
     for tecla in TECLAS_PRUEBA:
-        print(f"\n{bcolors.HEADER}▶  {tecla['nombre']}{bcolors.ENDC}")
+        if pedir_tecla(tecla) == 'cancel':
+            return
 
-        # Sin Shift
-        print(f"  {bcolors.OKBLUE}[1/2] Normal (sin Shift):{bcolors.ENDC} ", end='', flush=True)
-        r = get_key_press(con_shift=False)
-        if r['status'] == 'cancel':
-            print(f"\n{bcolors.FAIL}Cancelado.{bcolors.ENDC}"); return
-        if r['status'] == 'skip':
-            print(f"{bcolors.WARNING}omitida{bcolors.ENDC}"); continue
-        if r['status'] == 'valid':
-            tecla['normal'] = r['key']
-            label = '[tecla muerta]' if r['key'] == DEAD else repr(r['key'])
-            print(f"{bcolors.OKGREEN}{label}{bcolors.ENDC}")
-        else:
-            print(f"{bcolors.WARNING}timeout{bcolors.ENDC}"); continue
+    # ── Rondas de desempate adaptativas ──────────────────────────────────────
+    ya_rechazadas = set()
 
-        # Con Shift
-        print(f"  {bcolors.OKBLUE}[2/2] Con Shift:{bcolors.ENDC} ", end='', flush=True)
-        r = get_key_press(con_shift=True)
-        if r['status'] == 'valid':
-            tecla['shift'] = r['key']
-            label = '[tecla muerta]' if r['key'] == DEAD else repr(r['key'])
-            print(f"{bcolors.OKGREEN}{label}{bcolors.ENDC}")
-        else:
-            print(f"{bcolors.WARNING}—{bcolors.ENDC}")
+    for ronda in range(4):
+        scores = calcular_scores(TECLAS_PRUEBA)
+        if es_decisivo(scores):
+            break
 
-    # ── Resultados ────────────────────────────────────────────────────────────
+        tied = layouts_empatados(scores)
+        discriminantes = teclas_discriminantes(tied, TECLAS_PRUEBA, ya_rechazadas)
+        if not discriminantes:
+            break
+
+        clear_screen()
+        print(f"{bcolors.HEADER}{bcolors.BOLD}Ronda de desempate {ronda + 1}{bcolors.ENDC}"
+              f"  — empate entre {len(tied)} candidatos:")
+        for name in tied:
+            print(f"  {bcolors.WARNING}· {name}{bcolors.ENDC}")
+        print(f"\n{bcolors.OKBLUE}Necesito {len(discriminantes)} tecla(s) más para decidir.")
+        print(f"Espacio = esa tecla no existe en mi teclado{bcolors.ENDC}\n")
+
+        for tecla in discriminantes:
+            res = pedir_tecla(tecla, es_desempate=True)
+            if res == 'cancel':
+                break
+            if res == 'skip':
+                ya_rechazadas.add(tecla['nombre'])
+
+    # ── Ranking final ─────────────────────────────────────────────────────────
+    scores = calcular_scores(TECLAS_PRUEBA)
     clear_screen()
-    print(f"{bcolors.HEADER}{bcolors.BOLD}Resultados capturados{bcolors.ENDC}")
+    print(f"{bcolors.HEADER}{bcolors.BOLD}Comparación con layouts conocidos{bcolors.ENDC}")
     print(f"{bcolors.OKBLUE}{'─'*50}{bcolors.ENDC}\n")
+    mostrar_ranking(scores)
 
-    for t in TECLAS_PRUEBA:
-        if t['normal'] is not None or t['shift'] is not None:
-            n = ('[muerta]' if t['normal'] == DEAD else repr(t['normal'])) if t['normal'] is not None else 'N/A'
-            s = ('[muerta]' if t['shift']  == DEAD else repr(t['shift']))  if t['shift']  is not None else 'N/A'
-            print(f"  {bcolors.BOLD}{t['nombre']}{bcolors.ENDC}")
-            print(f"    Normal: {n}   Shift: {s}")
-
-    # ── Scoring ───────────────────────────────────────────────────────────────
-    print(f"\n{bcolors.HEADER}{bcolors.BOLD}Comparación con layouts conocidos{bcolors.ENDC}")
-    print(f"{bcolors.OKBLUE}{'─'*50}{bcolors.ENDC}\n")
-
-    scores = []
-    for nombre, ref in DISTRIBUCIONES.items():
-        puntos = 0
-        total  = 0
-        detalle = []
-        for t in TECLAS_PRUEBA:
-            nombre_t = t['nombre']
-            if nombre_t not in ref:
-                continue
-            total += 2
-            ref_n = ref[nombre_t]['normal']
-            ref_s = ref[nombre_t]['shift']
-            match_n = (t['normal'] == ref_n)
-            match_s = (t['shift']  == ref_s)
-            if match_n: puntos += 1
-            if match_s: puntos += 1
-            if not match_n or not match_s:
-                got_n = ('[muerta]' if t['normal'] == DEAD else repr(t['normal'])) if t['normal'] is not None else 'N/A'
-                exp_n = '[muerta]' if ref_n == DEAD else repr(ref_n)
-                got_s = ('[muerta]' if t['shift'] == DEAD else repr(t['shift'])) if t['shift'] is not None else 'N/A'
-                exp_s = '[muerta]' if ref_s == DEAD else repr(ref_s)
-                if not match_n:
-                    detalle.append(f"    {nombre_t} normal: obtuve {got_n}, esperaba {exp_n}")
-                if not match_s:
-                    detalle.append(f"    {nombre_t} shift:  obtuve {got_s}, esperaba {exp_s}")
-        pct = (puntos / total * 100) if total > 0 else 0
-        scores.append((pct, nombre, detalle))
-
-    scores.sort(reverse=True)
-
-    for i, (pct, nombre, detalle) in enumerate(scores):
-        bar_len = int(pct / 5)
-        bar = '█' * bar_len + '░' * (20 - bar_len)
-        color = bcolors.OKGREEN if pct >= 70 else (bcolors.WARNING if pct >= 40 else bcolors.FAIL)
-        print(f"  {color}{bar}{bcolors.ENDC} {pct:5.1f}%  {nombre}")
-        if i == 0 and detalle:
-            for d in detalle[:4]:
-                print(f"{bcolors.WARNING}{d}{bcolors.ENDC}")
-
+    # ── Veredicto ─────────────────────────────────────────────────────────────
     ganador_pct, ganador, _ = scores[0]
+    second_pct = scores[1][0] if len(scores) > 1 else 0
     print(f"\n{bcolors.OKBLUE}{'─'*50}{bcolors.ENDC}")
-    if ganador_pct >= 60:
-        print(f"{bcolors.OKGREEN}{bcolors.BOLD}Distribución detectada: {ganador}{bcolors.ENDC}")
-    elif ganador_pct >= 40:
-        print(f"{bcolors.WARNING}{bcolors.BOLD}Distribución probable: {ganador}  ({ganador_pct:.0f}% coincidencia){bcolors.ENDC}")
-        print(f"{bcolors.WARNING}Resultado poco concluyente. Revisá los detalles arriba.{bcolors.ENDC}")
-    else:
-        print(f"{bcolors.FAIL}{bcolors.BOLD}No se pudo identificar la distribución con certeza.{bcolors.ENDC}")
 
-    # Cruzar con localectl para confirmar o sugerir variante
+    if es_decisivo(scores):
+        print(f"{bcolors.OKGREEN}{bcolors.BOLD}Distribución detectada: {ganador}{bcolors.ENDC}")
+    elif ganador_pct - second_pct >= 10:
+        print(f"{bcolors.WARNING}{bcolors.BOLD}Distribución probable: {ganador}"
+              f"  ({ganador_pct:.0f}% vs {second_pct:.0f}%){bcolors.ENDC}")
+        print(f"{bcolors.WARNING}Revisá el detalle arriba si tenés dudas.{bcolors.ENDC}")
+    else:
+        tied_final = layouts_empatados(scores, umbral=5)
+        print(f"{bcolors.FAIL}{bcolors.BOLD}No se pudo determinar con certeza.{bcolors.ENDC}")
+        print(f"{bcolors.WARNING}Candidatos indistinguibles con las teclas probadas:{bcolors.ENDC}")
+        for name in tied_final[:4]:
+            print(f"  {bcolors.WARNING}· {name}{bcolors.ENDC}")
+
+    # ── Confirmación con localectl ─────────────────────────────────────────────
     if sys_info:
         layout  = sys_info.get('x11_layout') or sys_info.get('xkblayout', '')
         variant = sys_info.get('x11_variant') or sys_info.get('xkbvariant', '')
         if layout:
-            variant_str = f"({variant})" if variant else "(sin variante = estándar con teclas muertas)"
-            print(f"{bcolors.OKBLUE}Sistema reporta: layout={layout} {variant_str}{bcolors.ENDC}")
-            # Tabla de variantes conocidas de latam
-            _latam_variants = {
-                '':            'latam estándar (con teclas muertas, dead_acute en AD11)',
-                'nodeadkeys':  'sin teclas muertas (AD11=`/^, AC11=´/¨, BKSL=ç/Ç)',
-                'deadtilde':   'estándar + dead_tilde en AD12',
-                'dvorak':      'Dvorak (AC10=s, ñ en AD03)',
-                'colemak':     'Colemak (AC10=o, ñ en AD10)',
+            vs = f"({variant})" if variant else "(sin variante = estándar con teclas muertas)"
+            print(f"{bcolors.OKBLUE}Sistema reporta: layout={layout} {vs}{bcolors.ENDC}")
+            _latam = {
+                '':               'latam estándar (dead_acute en AD11)',
+                'nodeadkeys':     'sin teclas muertas (AD11=`/^, AC11=´/¨, BKSL=ç/Ç)',
+                'deadtilde':      'estándar + dead_tilde en AD12',
+                'dvorak':         'Dvorak (AC10=s, ñ en AD03)',
+                'colemak':        'Colemak (AC10=o, ñ en AD10)',
                 'colemak-gaming': 'Colemak con WASD en posición QWERTY',
             }
-            if layout == 'latam' and variant in _latam_variants:
-                print(f"{bcolors.OKBLUE}  → Variante: {_latam_variants[variant]}{bcolors.ENDC}")
+            if layout == 'latam' and variant in _latam:
+                print(f"{bcolors.OKBLUE}  → Variante: {_latam[variant]}{bcolors.ENDC}")
 
 if __name__ == '__main__':
     try:
