@@ -1,5 +1,7 @@
 # Teclado
 
+[![Archivado en Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/camammoli/Teclado/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/camammoli/Teclado)
+
 Detecta el layout físico de tu teclado en Linux mediante un cuestionario interactivo de teclas.
 
 Útil cuando `localectl` o `setxkbmap` no te dicen lo que realmente tenés, especialmente en Debian 12 con teclados importados o de gaming.
